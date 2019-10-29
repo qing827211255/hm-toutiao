@@ -7,7 +7,7 @@
       <div class="logo" :class="{smallLogo:!isOpen}"></div>
       <!-- 侧边导航 -->
       <el-menu
-        default-active="/"
+        :default-active="$route.path"
         class="el-menu-vertical-demo"
         background-color="#01273d"
         text-color="#fff"
