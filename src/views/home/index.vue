@@ -68,8 +68,8 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-setting" @click.native="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -96,6 +96,14 @@ export default {
   methods: {
     toggleMenu () {
       this.isOpen = !this.isOpen
+    },
+    setting () {
+      // 点击个人设置就会路由跳转到设置
+      this.$router.push('/setting')
+    },
+    logout () {
+      // 点击退出就会路由跳转出来
+      this.$router.push('/login')
     }
   },
   // 在组件初始化的时候就可以把用户名和头像对应上的功能
