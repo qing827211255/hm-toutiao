@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import local from '../../utils/local.js'
 export default {
   data () {
     const checkMobile = (rule, value, callback) => {
@@ -43,8 +44,8 @@ export default {
     }
     return {
       LoginForm: {
-        mobile: '',
-        code: ''
+        mobile: '13911111111',
+        code: '246810'
       },
       LoginRules: {
         mobile: [
@@ -68,6 +69,11 @@ export default {
         if (valid) {
           console.log('可以发请求登录')
           this.$axios.post('authorizations', this.LoginForm).then(res => {
+            // ---设置token保存用户登录的状态
+            // console.log(res)
+
+            local.setUser(res.data.data)
+
             this.$router.push('/')
           }).catch(() => {
             // 使用饿了么提供的提示框

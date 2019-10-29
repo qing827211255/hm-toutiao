@@ -5,6 +5,7 @@ import Login from '../views/login/index.vue'
 import Home from '../views/home/index.vue'
 import Welcome from '../views/welcome/index.vue'
 import NotFound from '@/views/404'
+import local from '../utils/local.js'
 
 // 使用
 Vue.use(VueRouter)
@@ -22,6 +23,19 @@ var router = new VueRouter({
       path: '*', component: NotFound
     }]
 
+})
+
+// 前置路由导航守卫
+router.beforeEach((to, from, next) => {
+  // 获取到用户的token
+  const user = local.getUser()
+  console.log(user)
+  // to 跳转目标路由对象
+  // next() 放行  next('/login') 拦截到登录
+  if (to.path !== '/login' && !user) {
+    return next('/login')
+  }
+  next()
 })
 
 // 导出
