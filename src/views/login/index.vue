@@ -3,6 +3,7 @@
     <el-card>
       <img src="../../assets/logo_index.png" alt />
 
+                              <!-- ref来获取dom元素 -->
       <el-form :model="LoginForm" ref="LoginForm" :rules="LoginRules" status-icon>
         <el-form-item prop="mobile">
           <el-input v-model="LoginForm.mobile" placeholder="请输入手机号"></el-input>
@@ -65,20 +66,35 @@ export default {
     login () {
       // 触发了登录按钮的点击事件,就对上面两个输入框校验
 
-      this.$refs['LoginForm'].validate((valid) => {
+      // this.$refs['LoginForm'].validate((valid) => {
+      //   if (valid) {
+      //     console.log('可以发请求登录')
+      //     this.$axios.post('authorizations', this.LoginForm).then(res => {
+      //       // ---设置token保存用户登录的状态
+      //       // console.log(res)
+
+      //       local.setUser(res.data.data)
+
+      //       this.$router.push('/')
+      //     }).catch(() => {
+      //       // 使用饿了么提供的提示框
+      //       this.$message.error('登录名或密码错误')
+      //     })
+      //   }
+      // })
+
+      // 对表单验证的代码优化
+      this.$refs['LoginForm'].validate(async valid => {
         if (valid) {
-          console.log('可以发请求登录')
-          this.$axios.post('authorizations', this.LoginForm).then(res => {
-            // ---设置token保存用户登录的状态
-            // console.log(res)
-
-            local.setUser(res.data.data)
-
+          try {
+            const { data: { data } } = await this.$axios.post('authorizations', this.LoginForm)
+            // 获取token
+            local.setUser(data)
+            // 跳转到首页
             this.$router.push('/')
-          }).catch(() => {
-            // 使用饿了么提供的提示框
+          } catch (e) {
             this.$message.error('登录名或密码错误')
-          })
+          }
         }
       })
     }

@@ -7,7 +7,7 @@
       <div class="logo" :class="{smallLogo:!isOpen}"></div>
       <!-- 侧边导航 -->
       <el-menu
-        default-active="2"
+        default-active="/"
         class="el-menu-vertical-demo"
         background-color="#01273d"
         text-color="#fff"
