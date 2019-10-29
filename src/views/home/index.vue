@@ -62,8 +62,9 @@
         <!-- 右侧下拉菜单 -->
         <el-dropdown class="dropdown">
           <span class="el-dropdown-link">
-            <img src="../../assets/avatar.jpg" alt class="headIcon" />
-            <span class="userName">管理员</span>
+            <!-- 注意 这里的图片src为动态的 因此必须是:src -->
+            <img :src="photo" alt class="headIcon" />
+            <span class="userName">{{name}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -82,16 +83,28 @@
 </template>
 
 <script>
+import local from '../../utils/local.js'
 export default {
   data () {
     return {
-      isOpen: true
+      isOpen: true,
+      name: '',
+      photo: ''
     }
   },
+
   methods: {
     toggleMenu () {
       this.isOpen = !this.isOpen
     }
+  },
+  // 在组件初始化的时候就可以把用户名和头像对应上的功能
+  created () {
+    // 获取用户信息
+    const user = local.getUser() || {}
+    // data申明  名称 头像
+    this.name = user.name
+    this.photo = user.photo
   }
 }
 </script>
