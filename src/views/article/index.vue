@@ -3,7 +3,7 @@
     <el-card>
       <div slot="header">
         <!-- 面包屑的基本使用 -->
-           <my-bread>内容管理</my-bread>
+        <my-bread>内容管理</my-bread>
       </div>
       <!-- 表单部分 -->
       <el-form label-width="80px" size="small">
@@ -50,8 +50,20 @@
       </el-form>
     </el-card>
     <!-- 下面的卡片:筛选结果布局 -->
-    <el-card>
-         <div>下面</div>
+    <el-card style="margin-top:20px">
+      <!-- 表头 -->
+      <div slot="header">
+        <span>根据筛选条件共查询到 0 条结果：</span>
+      </div>
+      <!-- 表格 -->
+      <el-table :data="articles">
+        <el-table-column label="封面"></el-table-column>
+        <el-table-column label="标题"></el-table-column>
+        <el-table-column label="状态"></el-table-column>
+        <el-table-column label="发布时间"></el-table-column>
+        <el-table-column label="操作"></el-table-column>
+      </el-table>
+      <el-pagination style="margin-top:20px"   background layout="prev, pager, next" :total="1000"></el-pagination>
     </el-card>
   </div>
 </template>
@@ -66,7 +78,6 @@ export default {
         channel_id: null,
         begin_pubdate: null,
         end_pubdate: null
-
       },
       channelOptions: [
         {
@@ -82,7 +93,8 @@ export default {
           label: '蚵仔煎'
         }
       ],
-      dateArr: []
+      dateArr: [],
+      articles: []
     }
   }
 }
