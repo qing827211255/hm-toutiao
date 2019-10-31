@@ -49,6 +49,10 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <!-- 下面的卡片:筛选结果布局 -->
+    <el-card>
+         <div>下面</div>
+    </el-card>
   </div>
 </template>
 
@@ -59,7 +63,10 @@ export default {
       reqParams: {
         // 将要传给后端的参数放在一个统一的对象中方便管理
         status: null,
-        channel_id: null
+        channel_id: null,
+        begin_pubdate: null,
+        end_pubdate: null
+
       },
       channelOptions: [
         {
