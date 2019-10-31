@@ -24,9 +24,9 @@
           <el-select v-model="reqParams.channel_id" placeholder="请选择">
             <el-option
               v-for="item in channelOptions"
-              :key="item. value"
-              :label="item.label"
-              :value="item. value"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -63,12 +63,14 @@
         <el-table-column label="发布时间"></el-table-column>
         <el-table-column label="操作"></el-table-column>
       </el-table>
-      <el-pagination style="margin-top:20px"   background layout="prev, pager, next" :total="1000"></el-pagination>
+      <!--  -->
+      <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="1000"></el-pagination>
     </el-card>
   </div>
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -79,23 +81,23 @@ export default {
         begin_pubdate: null,
         end_pubdate: null
       },
-      channelOptions: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        }
-      ],
+      channelOptions: [],
       dateArr: [],
       articles: []
     }
+  },
+  methods: {
+    // 获取频道选项数据
+    async getChannelOptions () {
+      // var res = await this.$axios.get('channels')
+      // console.log(res)
+      const { data: { data } } = await this.$axios.get('channels')
+      this.channelOptions = data.channels
+    }
+  },
+  created () {
+    // 获取频道选项数据
+    this.getChannelOptions()
   }
 }
 </script>
