@@ -57,11 +57,34 @@
       </div>
       <!-- 表格 -->
       <el-table :data="articles">
-        <el-table-column label="封面"></el-table-column>
-        <el-table-column label="标题"></el-table-column>
-        <el-table-column label="状态"></el-table-column>
-        <el-table-column label="发布时间"></el-table-column>
-        <el-table-column label="操作"></el-table-column>
+        <el-table-column label="封面">
+          <!-- 自定义列的渲染之封面列 -->
+          <template slot-scope="scope">
+            <el-image :src="scope.row.cover.images[0]" style="width:150px;height:100px">
+              <div slot="error">
+                <img src="../../assets/error.gif" width="150" height="100" />
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="标题" prop="title"></el-table-column>
+        <el-table-column label="状态">
+          <!--自定义列的渲染之发布事件列  -->
+          <template slot-scope="scope">
+
+            <el-tag type="info" v-if="scope.row.status===0">草稿</el-tag>
+            <el-tag  v-if="scope.row.status===1">待审核</el-tag>
+            <el-tag type="success" v-if="scope.row.status===2">审核通过</el-tag>
+            <el-tag type="warning" v-if="scope.row.status===3">审核失败</el-tag>
+            <el-tag type="danger" v-if="scope.row.status===3">已删除</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="发布时间" prop="pubdate"></el-table-column>
+        <el-table-column label="操作">
+          <!-- 在列表中的编辑按钮与删除按钮   其中plain属性就是朴素按钮的属性 让按钮颜色变淡-->
+          <el-button type="primary" icon="el-icon-edit" plain circle></el-button>
+          <el-button type="danger" icon="el-icon-delete" plain circle></el-button>
+        </el-table-column>
       </el-table>
       <!--  -->
       <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="1000"></el-pagination>
@@ -70,7 +93,6 @@
 </template>
 
 <script>
-
 export default {
   data () {
     return {
@@ -81,9 +103,9 @@ export default {
         begin_pubdate: null,
         end_pubdate: null
       },
-      channelOptions: [],
+      channelOptions: [], // 用来承载渲染好的下拉菜单的容器
       dateArr: [],
-      articles: []
+      articles: [] // 用来承载渲染好的文章列表项的容器
     }
   },
   methods: {
@@ -91,13 +113,24 @@ export default {
     async getChannelOptions () {
       // var res = await this.$axios.get('channels')
       // console.log(res)
-      const { data: { data } } = await this.$axios.get('channels')
+      const {
+        data: { data }
+      } = await this.$axios.get('channels')
       this.channelOptions = data.channels
+    },
+    // 获取文章列表项
+    async getArticles () {
+      const {
+        data: { data }
+      } = await this.$axios.get('articles')
+      this.articles = data.results
     }
   },
   created () {
     // 获取频道选项数据
     this.getChannelOptions()
+    // 获取文章列表
+    this.getArticles()
   }
 }
 </script>
