@@ -21,14 +21,16 @@
 
         <el-form-item label="频道:">
           <!-- 表单元素选择器 -->
-          <el-select v-model="reqParams.channel_id" clearable placeholder="请选择">
+          <!-- <el-select v-model="reqParams.channel_id" clearable placeholder="请选择">
             <el-option
               v-for="item in channelOptions"
               :key="item.id"
               :label="item.name"
               :value="item.id"
             ></el-option>
-          </el-select>
+          </el-select> -->
+          <!--父组件上使用子组件 -->
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
 
         <el-form-item label="日期:">
@@ -137,15 +139,16 @@ export default {
     }
   },
   methods: {
-    // 1获取频道选项数据
-    async getChannelOptions () {
-      // var res = await this.$axios.get('channels')
-      // console.log(res)
-      const {
-        data: { data }
-      } = await this.$axios.get('channels')
-      this.channelOptions = data.channels
-    },
+    // // 1获取频道选项数据
+    // async getChannelOptions () {
+    //   // var res = await this.$axios.get('channels')
+    //   // console.log(res)
+    //   const {
+    //     data: { data }
+    //   } = await this.$axios.get('channels')
+    //   this.channelOptions = data.channels
+    // },
+
     // 2获取文章列表项
     async getArticles () {
       const {
@@ -203,8 +206,6 @@ export default {
 
   },
   created () {
-    // 获取频道选项数据
-    this.getChannelOptions()
     // 获取文章列表
     this.getArticles()
   }
