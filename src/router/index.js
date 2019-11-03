@@ -8,6 +8,7 @@ import NotFound from '@/views/404'
 import local from '../utils/local.js'
 import Article from '@/views/article'
 import Image from '@/views/image'
+import Publish from '@/views/publish'
 
 // 使用
 Vue.use(VueRouter)
@@ -22,9 +23,8 @@ var router = new VueRouter({
         // 欢迎页面
         { path: '/', component: Welcome },
         { path: '/article', component: Article },
-        { path: '/image', component: Image
-
-        }]
+        { path: '/image', component: Image },
+        { path: '/publish', component: Publish }]
     },
     {
       path: '*', component: NotFound
