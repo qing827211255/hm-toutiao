@@ -22,7 +22,9 @@ var router = new VueRouter({
         // 欢迎页面
         { path: '/', component: Welcome },
         { path: '/article', component: Article },
-        { path: '/image', component: Image }]
+        { path: '/image', component: Image
+
+        }]
     },
     {
       path: '*', component: NotFound

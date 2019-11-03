@@ -9,6 +9,8 @@ import axios from '@/api'
 // 引入面包屑
 import plugin from './components/index.js'
 
+import '@/style/index.less'
+
 Vue.config.productionTip = false
 // 使用element-ui
 Vue.use(ElementUI)
