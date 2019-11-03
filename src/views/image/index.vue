@@ -13,14 +13,20 @@
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
         <!-- 添加素材 -->
-        <el-button @click="dialogVisible=true" type="success" size="small" style="float:right">添加素材</el-button>
+        <el-button @click="open" type="success" size="small" style="float:right">添加素材</el-button>
       </div>
-             <!-- 上传素材的提示框 -->
+      <!-- 上传素材的提示框 -->
+      <!-- action 是图片上传的接口地址 -->
+      <!-- 因为是upload组件,不是自己设置过的的axios组件,需要设置请求头 携带token -->
       <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
         <el-upload
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false">
+          action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+          :headers="headers"
+          name="image"
+          :on-success="handleSuccess"
+          :show-file-list="false"
+        >
           <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -57,6 +63,8 @@
 </template>
 
 <script>
+import local from '../../utils/local.js'
+
 export default {
   data () {
     return {
@@ -68,7 +76,11 @@ export default {
       dialogVisible: false,
       images: [],
       total: 0,
-      imageUrl: null
+      imageUrl: null, // 上传成功后的图片地址
+      headers: {
+        // 给upload组件额外设置请求头
+        Authorization: `Bearer ${local.getUser().token}`
+      }
     }
   },
   methods: {
@@ -113,7 +125,29 @@ export default {
         .then(async () => {
           await this.$axios.delete(`/user/images/${id}`)
           this.getImages()
-        }).catch(() => {})
+        })
+        .catch(() => {})
+    },
+    // 6 素材上传成功函数
+    handleSuccess (res) {
+      // res 就是响应主体  res.data.url 就是图片地址
+      // 预览
+      this.imageUrl = res.data.url
+      // 提示
+      this.$message.success('上传成功')
+      // 设置定时器
+      window.setTimeout(() => {
+        // 关闭
+        this.dialogVisible = false
+        // 更新列表
+        this.getImages()
+      }, 2000)
+    },
+    // 7  设置点击"添加按钮"的立即清空(之前留下的上传痕迹)功能
+    open () {
+      // 显示对话框
+      this.dialogVisible = true
+      this.imageUrl = ''
     }
   },
   created () {
