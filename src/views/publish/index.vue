@@ -12,7 +12,10 @@
         </el-form-item>
 
         <!-- 富文本区域 -->
-        <el-form-item label="内容: ">富文本--待写</el-form-item>
+        <el-form-item label="内容: ">
+               <quill-editor v-model="content" :options="editorOption">
+  </quill-editor>
+        </el-form-item>
 
         <!-- 选封面图的按钮区 -->
         <el-form-item label="封面: ">
@@ -22,7 +25,7 @@
             <el-radio :label="0">无图</el-radio>
             <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
-           <!-- 待写的上传组件 -->
+          <!-- 待写的上传组件 -->
         </el-form-item>
 
         <!-- 频道   利用封装好的频道功能-->
@@ -30,19 +33,26 @@
           <my-channel v-model="articleForm.channel_id"></my-channel>
         </el-form-item>
 
-      <!-- 发表和存入草稿按钮 -->
-      <el-form-item>
-        <el-button>存入草稿</el-button>
-        <el-button type="primary">发表</el-button>
-      </el-form-item>
-
+        <!-- 发表和存入草稿按钮 -->
+        <el-form-item>
+          <el-button>存入草稿</el-button>
+          <el-button type="primary">发表</el-button>
+        </el-form-item>
       </el-form>
     </el-card>
   </div>
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
+
 export default {
+  components: {
+    quillEditor
+  },
   data () {
     return {
       articleForm: {
@@ -57,5 +67,5 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="less">
 </style>
