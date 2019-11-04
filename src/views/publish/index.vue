@@ -24,7 +24,8 @@
             <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
           <!-- 封装好的图片上传的组件 -->
-           <my-image></my-image>
+          <!-- 封面组件实现双向绑定父子传值,后端是用数组放着图片的url的-->
+           <my-image v-model="articleForm.cover.images[0]"></my-image>
         </el-form-item>
 
         <!-- 频道   利用封装好的频道功能-->
@@ -60,7 +61,8 @@ export default {
         title: null,
         content: null,
         cover: {
-          type: 1
+          type: 1,
+          images: []
         },
         channel_id: null
       },

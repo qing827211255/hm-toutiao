@@ -3,7 +3,8 @@
   <div class="my-image">
     <!--  按钮-->
     <div class="btn_box" @click="open">
-      <img :src="defaultImage" alt />
+  <!-- 父子传值 子组件要么显示父亲给的value要么显示默认  注意value||dafaultImage的顺序不可以变化 -->
+      <img :src="value||defaultImage" alt />
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible" width="750px">
@@ -67,6 +68,7 @@ import defaultImage from '../assets/default.png'
 
 export default {
   name: 'my-image',
+  props: ['value'], // 父传给子组件值时候,子组件接收
   data () {
     return {
       defaultImage, // 默认的按钮图
@@ -96,7 +98,9 @@ export default {
           return this.$message.warning('请挑选一张图')
         }
         // 给img的src赋值图片地址
-        this.defaultImage = this.selectedImageUrl
+        // this.defaultImage = this.selectedImageUrl
+        //  子组件的提交图片地址要传给父组件
+        this.$emit('input', this.selectedImageUrl)
         this.dialogVisible = false
         // 当是上传图片界面
       } else {
@@ -104,7 +108,9 @@ export default {
           return this.$message.warning('请上传一张图') // 判断是否为空
         }
         // 给img的src赋值图片地址
-        this.defaultImage = this.uploadImageUrl
+        // this.defaultImage = this.uploadImageUrl
+        // 把这个默认图的提交地址传给父亲
+        this.$emit('input', this.uploadImageUrl)
         this.dialogVisible = false
       }
     },
