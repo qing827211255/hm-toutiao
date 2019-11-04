@@ -3,14 +3,14 @@
   <div class="my-image">
     <!--  按钮-->
     <div class="btn_box" @click="open">
-      <img src="../assets/default.png" alt />
+      <img :src="defaultImage" alt />
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible" width="750px">
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="素材库" name="image">
           <!-- 全部与收藏按钮 -->
-          <el-radio-group v-model="reqParams.collect" @change="toggleList">
+          <el-radio-group v-model="reqParams.collect" @change="toggleList" size="small">
             <el-radio-button :label="false">全部</el-radio-button>
             <el-radio-button :label="true">收藏</el-radio-button>
           </el-radio-group>
@@ -55,7 +55,7 @@
       </el-tabs>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="confirmImage">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -63,10 +63,13 @@
 
 <script>
 import local from '../utils/local.js'
+import defaultImage from '../assets/default.png'
+
 export default {
   name: 'my-image',
   data () {
     return {
+      defaultImage, // 默认的按钮图
       reqParams: {
         collect: 'false',
         page: 1,
@@ -85,6 +88,26 @@ export default {
     }
   },
   methods: {
+    //     8. 把图片显示到最外层的预览窗口中
+    confirmImage () {
+      // 当是素材库界面时
+      if (this.activeName === 'image') {
+        if (!this.selectedImageUrl) { // 判断是否为空
+          return this.$message.warning('请挑选一张图')
+        }
+        // 给img的src赋值图片地址
+        this.defaultImage = this.selectedImageUrl
+        this.dialogVisible = false
+        // 当是上传图片界面
+      } else {
+        if (!this.uploadImageUrl) {
+          return this.$message.warning('请上传一张图') // 判断是否为空
+        }
+        // 给img的src赋值图片地址
+        this.defaultImage = this.uploadImageUrl
+        this.dialogVisible = false
+      }
+    },
     // 7.给选中的图添加选中遮罩样式
     selectedImage (url) {
       this.selectedImageUrl = url
@@ -118,16 +141,7 @@ export default {
       this.images = data.results
       this.total = data.total_count
     },
-    // 4. 实现功能:点击星星切换是否为收藏的状态
-    async toggleStatus (item) {
-      const {
-        data: { data }
-      } = await this.$axios.put(`/user/images/${item.id}`, {
-        collect: !item.is_collected
-      })
-      item.is_collected = data.collect
-      this.$message.success(data.collect ? '添加收藏成功' : '取消收藏成功')
-    },
+
     // 5分页函数
     pager (newPage) {
       // 先把当前页赋值给要传到后端的参数
