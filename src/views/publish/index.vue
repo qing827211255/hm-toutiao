@@ -11,11 +11,9 @@
           <el-input v-model="articleForm.title" style="width:400px"></el-input>
         </el-form-item>
 
-        <!-- 富文本区域 -->
-        <el-form-item label="内容: ">
-               <quill-editor v-model="content" :options="editorOption">
-  </quill-editor>
-        </el-form-item>
+        <el-form-item label="内容: "></el-form-item>
+        <!-- 富文本区域    第三方插件 quill-editor-->
+        <quill-editor v-model="articleForm.content" :options="editorOption"></quill-editor>
 
         <!-- 选封面图的按钮区 -->
         <el-form-item label="封面: ">
@@ -25,7 +23,8 @@
             <el-radio :label="0">无图</el-radio>
             <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
-          <!-- 待写的上传组件 -->
+          <!-- 封装好的图片上传的组件 -->
+           <my-image></my-image>
         </el-form-item>
 
         <!-- 频道   利用封装好的频道功能-->
@@ -44,12 +43,14 @@
 </template>
 
 <script>
+// 富文本编辑器的引入
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 
 export default {
+
   components: {
     quillEditor
   },
@@ -57,11 +58,26 @@ export default {
     return {
       articleForm: {
         title: null,
+        content: null,
         cover: {
           type: 1
         },
         channel_id: null
+      },
+      editorOption: {
+        placeholder: '',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            ['image'] // 老师给补充的图片工具 在博客说明书上面没有看到
+          ]
+        }
       }
+
     }
   }
 }

@@ -1,0 +1,203 @@
+<template>
+  <!-- 上传组件区域 -->
+  <div class="my-image">
+    <!--  按钮-->
+    <div class="btn_box" @click="open">
+      <img src="../assets/default.png" alt />
+    </div>
+    <!-- 对话框 -->
+    <el-dialog :visible.sync="dialogVisible" width="750px">
+      <el-tabs v-model="activeName" type="card">
+        <el-tab-pane label="素材库" name="image">
+          <!-- 全部与收藏按钮 -->
+          <el-radio-group v-model="reqParams.collect" @change="toggleList">
+            <el-radio-button :label="false">全部</el-radio-button>
+            <el-radio-button :label="true">收藏</el-radio-button>
+          </el-radio-group>
+          <!--全部收藏的图片 列表 -->
+          <div class="img_list">
+            <div
+              class="img_item"
+              :class="{selected:selectedImageUrl===item.url}"
+              @click="selectedImage(item.url)"
+              v-for="item in images"
+              :key="item.id"
+            >
+              <img :src="item.url" alt />
+            </div>
+          </div>
+          <!-- 分页 -->
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="total"
+            :page-size="reqParams.per_page"
+            @current-change="pager"
+            :current-page="reqParams.page"
+          ></el-pagination>
+        </el-tab-pane>
+
+        <el-tab-pane label="上传图片" name="upload">
+          <!-- 上传组件   on-success是上传函数-->
+          <el-upload
+            class="avatar-uploader"
+            action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+            :headers="headers"
+            name="image"
+            :on-success="handleSuccess"
+            :show-file-list="false"
+          >
+            <!-- uploadImageUrl是上传处预览图的图床 -->
+            <img v-if="uploadImageUrl" :src="uploadImageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-tab-pane>
+      </el-tabs>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import local from '../utils/local.js'
+export default {
+  name: 'my-image',
+  data () {
+    return {
+      reqParams: {
+        collect: 'false',
+        page: 1,
+        per_page: 6
+      },
+      selectedImageUrl: null,
+      activeName: 'image', // 上传组件中的标签栏默认选中素材库
+      dialogVisible: false,
+      images: [],
+      total: 0,
+      uploadImageUrl: null, // 上传成功后的图片地址
+      headers: {
+        // 给upload组件额外设置请求头
+        Authorization: `Bearer ${local.getUser().token}`
+      }
+    }
+  },
+  methods: {
+    // 7.给选中的图添加选中遮罩样式
+    selectedImage (url) {
+      this.selectedImageUrl = url
+    },
+    // 6 上传成功函数
+    handleSuccess (res) {
+      //     上传的处的预览
+      this.uploadImageUrl = res.data.url
+      // 提示
+      this.$message.success('上传成功')
+    },
+
+    // 1打开对话框
+    open () {
+      this.selectedImageUrl = '' // 清空选中的样式的图床
+      this.uploadImageUrl = '' // 清空上床的图床
+      this.dialogVisible = true
+      this.getImages()
+    },
+    // 3 切换全部与收藏的函数
+    toggleList () {
+      this.reqParams.page = 1
+      this.getImages()
+    },
+    // 2获取图片列表函数
+    async getImages () {
+      const {
+        data: { data }
+      } = await this.$axios.get('/user/images', { params: this.reqParams })
+
+      this.images = data.results
+      this.total = data.total_count
+    },
+    // 4. 实现功能:点击星星切换是否为收藏的状态
+    async toggleStatus (item) {
+      const {
+        data: { data }
+      } = await this.$axios.put(`/user/images/${item.id}`, {
+        collect: !item.is_collected
+      })
+      item.is_collected = data.collect
+      this.$message.success(data.collect ? '添加收藏成功' : '取消收藏成功')
+    },
+    // 5分页函数
+    pager (newPage) {
+      // 先把当前页赋值给要传到后端的参数
+      this.reqParams.page = newPage
+      // 向后端请求重新获取列表
+      this.getImages()
+    }
+  }
+}
+</script>
+
+<style scoped lang="less">
+.btn_box {
+  width: 150px;
+  height: 150px;
+  border: 1px dashed rgb(235, 154, 154);
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+.dialog-footer {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+}
+
+.img_list {
+  margin-top: 20px;
+  .img_item {
+    display: inline-block; //解决不在一行显示的方法
+    width: 180px;
+    height: 180px;
+    border: 1px dashed rgb(211, 209, 209);
+    position: relative;
+    margin-right: 29px;
+    margin-bottom: 20px;
+    &.selected::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3) url(../assets/selected.png) no-repeat
+        center / 50px 50px;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .img_footer {
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      color: white;
+      background: rgba(0, 0, 0, 0.3);
+      text-align: center;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      span {
+        margin: 0 20px;
+        &.red {
+          //要注意   // span .red{} 选择器无效 但是span &.red{} 选择器有效  &连接符
+          color: red;
+        }
+      }
+    }
+  }
+}
+</style>
