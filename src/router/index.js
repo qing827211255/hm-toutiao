@@ -9,6 +9,7 @@ import local from '../utils/local.js'
 import Article from '@/views/article'
 import Image from '@/views/image'
 import Publish from '@/views/publish'
+import Comment from '@/views/comment'
 
 // 使用
 Vue.use(VueRouter)
@@ -24,7 +25,8 @@ var router = new VueRouter({
         { path: '/', component: Welcome },
         { path: '/article', component: Article },
         { path: '/image', component: Image },
-        { path: '/publish', component: Publish }]
+        { path: '/publish', component: Publish },
+        { path: '/comment', component: Comment }]
     },
     {
       path: '*', component: NotFound

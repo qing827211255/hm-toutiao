@@ -160,6 +160,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+.my-image {
+  display: inline-block;  // 保证三图的时候 是在一行显示的
+  margin-right: 20px;
+}
 .btn_box {
   width: 150px;
   height: 150px;
