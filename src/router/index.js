@@ -10,6 +10,8 @@ import Article from '@/views/article'
 import Image from '@/views/image'
 import Publish from '@/views/publish'
 import Comment from '@/views/comment'
+import Setting from '@/views/setting'
+import Fans from '@/views/fans'
 
 // 使用
 Vue.use(VueRouter)
@@ -26,7 +28,9 @@ var router = new VueRouter({
         { path: '/article', component: Article },
         { path: '/image', component: Image },
         { path: '/publish', component: Publish },
-        { path: '/comment', component: Comment }]
+        { path: '/comment', component: Comment },
+        { path: '/setting', component: Setting },
+        { path: '/fans', component: Fans }]
     },
     {
       path: '*', component: NotFound

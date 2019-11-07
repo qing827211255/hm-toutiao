@@ -3,7 +3,8 @@
   <div class="my-image">
     <!--  按钮-->
     <div class="btn_box" @click="open">
-  <!-- 父子传值 子组件要么显示父亲给的value要么显示默认  注意value||dafaultImage的顺序不可以变化 -->
+      <!-- 父子传值 子组件要么显示父亲给的value要
+      么显示默认  注意value||dafaultImage的顺序不可以变化-->
       <img :src="value||defaultImage" alt />
     </div>
     <!-- 对话框 -->
@@ -94,7 +95,8 @@ export default {
     confirmImage () {
       // 当是素材库界面时
       if (this.activeName === 'image') {
-        if (!this.selectedImageUrl) { // 判断是否为空
+        if (!this.selectedImageUrl) {
+          // 判断是否为空
           return this.$message.warning('请挑选一张图')
         }
         // 给img的src赋值图片地址
@@ -161,7 +163,7 @@ export default {
 
 <style scoped lang="less">
 .my-image {
-  display: inline-block;  // 保证三图的时候 是在一行显示的
+  display: inline-block; // 保证三图的时候 是在一行显示的
   margin-right: 20px;
 }
 .btn_box {

@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import eventBus from '@/eventBus'
 import local from '../../utils/local.js'
 export default {
   data () {
@@ -113,6 +114,13 @@ export default {
     // data申明  名称 头像
     this.name = user.name
     this.photo = user.photo
+    // 绑定事件 updateName 通过$on来接收传值,$on(自定义名称,函数)
+    eventBus.$on('updateName', (name) => {
+      this.name = name
+    })
+    eventBus.$on('updatePhoto', (photo) => {
+      this.photo = photo
+    })
   }
 }
 </script>
