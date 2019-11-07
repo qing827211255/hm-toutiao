@@ -18,7 +18,7 @@
       <!-- 上传素材的提示框 -->
       <!-- action 是图片上传的接口地址 -->
       <!-- 因为是upload组件,不是自己设置过的的axios组件,需要设置请求头 携带token -->
-      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
         <el-upload
           class="avatar-uploader"
           action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
